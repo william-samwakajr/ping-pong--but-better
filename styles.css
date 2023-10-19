@@ -1,0 +1,21 @@
+body {
+    text-align: center;
+    font-family: sans-serif;
+}
+
+canvas {
+    background-color: black;
+}
+
+.buttons {
+    margin: 50px;
+    display: flex;
+    justify-content: center;
+    justify-content: space-around;
+}
+
+button {
+    width: 100px;
+    height: 50px;
+    border-radius: 30px;
+}
