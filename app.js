@@ -70,25 +70,25 @@ class projectile {
         this.draw()
         this.position.y += this.velocity.y
         this.position.x += this.velocity.x
-        if (ball.position.x + ball.radius + ball.velocity.x >= canvas.width || ball.position.x + ball.radius + ball.velocity.x <= 0) {
+        if (ball.position.x + ball.radius + ball.velocity.x >= canvas.width) {
             ball.position.x = 500;
             ball.position.y = 270;
             ball.velocity.x = 3 || -3;
         }
         if (ball.position.x + ball.radius + ball.velocity.x >= opponent.position.x) {
             ball.velocity.x = -3;
-            ball.velocity.y = -3 || 3;
+            ball.velocity.y = 5;
 
         }
         if (ball.position.x - ball.radius <= player.position.x + player.size.width) {
-            ball.velocity.x = 3;
-            ball.velocity.y = 3 || -3;
+            ball.velocity.y = -5;
+            ball.velocity.x = 3
         }
-        if (ball.position.y + ball.radius + ball.velocity.y <= 100) {
-            ball.velocity.y = 3;
+        if (ball.position.y - ball.radius <= 0) {
+            ball.velocity.y = 5;
         }
         if (ball.position.y + ball.radius + ball.velocity.y >= canvas.height) {
-            ball.velocity.y = -3;
+            ball.velocity.y = -5;
         }
 
     };
@@ -130,7 +130,7 @@ const ball = new projectile({
         x: 0,
         y: 0
     }
-}, 50);
+}, 30);
 
 function animate() {
     window.requestAnimationFrame(animate);
