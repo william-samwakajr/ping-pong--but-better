@@ -5,6 +5,8 @@ const pause = document.getElementById('pause');
 canvas.width = 1024;
 canvas.height = 576;
 
+
+
 function draw_grid(ctx, minor, major, stroke, fill) {
     minor = minor || 10;
     major = major || minor * 5;
@@ -48,9 +50,13 @@ class gameObject {
     update() {
         this.draw()
         this.position.y += this.velocity.y
+
+
         if (this.position.y + this.size.height + this.velocity.y >= canvas.height || this.position.y + this.size.height + this.velocity.y <= 0) {
             this.velocity.y = 0;
         }
+
+
     };
 };
 class projectile {
@@ -70,26 +76,38 @@ class projectile {
         this.draw()
         this.position.y += this.velocity.y
         this.position.x += this.velocity.x
-        if (ball.position.x + ball.radius + ball.velocity.x >= canvas.width) {
+
+        let x1 = player.position.x + player.size.width / 2 || opponent.position.x + player.size.width / 2;
+        let x2 = this.position.x;
+        let y1 = player.position.y + player.size.height / 2 || opponent.position.y + player.size.width / 2;
+        let y2 = this.position.y;
+        let dX = x2 - x1;
+        let dY = y2 - y1
+
+        if (ball.position.x + ball.radius + this.velocity.x >= canvas.width) {
             ball.position.x = 500;
             ball.position.y = 270;
-            ball.velocity.x = 3 || -3;
+            ball.velocity.x *= 1 || -1
         }
-        if (ball.position.x + ball.radius + ball.velocity.x >= opponent.position.x) {
-            ball.velocity.x = -3;
-            ball.velocity.y = 5;
+        if (ball.position.x - ball.radius - this.velocity.x <= 0) {
+            ball.position.x = 500;
+            ball.position.y = 270;
+            ball.velocity.x *= 1 || -1
+        }
 
+        if (this.position.y - this.radius <= 0) {
+            ball.velocity.y *= -1;
         }
-        if (ball.position.x - ball.radius <= player.position.x + player.size.width) {
-            ball.velocity.y = -5;
-            ball.velocity.x = 3
+        if (this.position.y + this.radius + this.velocity.y >= canvas.height) {
+            ball.velocity.y *= -1;
         }
-        if (ball.position.y - ball.radius <= 0) {
-            ball.velocity.y = 5;
+        if (dX <= this.radius + player.size.width / 2 && dY <= this.radius + player.size.height / 2) {
+            ball.position.x *= -1
         }
-        if (ball.position.y + ball.radius + ball.velocity.y >= canvas.height) {
-            ball.velocity.y = -5;
+        if (dX <= this.radius + opponent.size.width / 2 && dY <= this.radius + opponent.size.height / 2) {
+            this.position.x *= -1
         }
+
 
     };
 }
@@ -104,13 +122,13 @@ const player = new gameObject({
         y: 0
     }
 }, {
-    width: 50,
+    width: 25,
     height: 200
 });
 
 const opponent = new gameObject({
     position: {
-        x: 970,
+        x: 999,
         y: 180
     },
     velocity: {
@@ -118,7 +136,7 @@ const opponent = new gameObject({
         y: 0
     }
 }, {
-    width: 50,
+    width: 25,
     height: 200
 });
 const ball = new projectile({
@@ -143,12 +161,12 @@ function animate() {
 animate();
 window.addEventListener('keydown', (event) => {
     if (event.key == 'w') {
-        player.velocity.y = -3;
+        player.velocity.y = -15;
         if (player.position.y + player.size.height + player.velocity.y <= 0) {
             player.velocity.y = 0;
         }
     } else if (event.key == 's') {
-        player.velocity.y = 3;
+        player.velocity.y = 15;
     }
 });
 window.addEventListener('keyup', (event) => {
@@ -160,9 +178,9 @@ window.addEventListener('keyup', (event) => {
 })
 window.addEventListener('keydown', (event) => {
     if (event.key == 'ArrowUp') {
-        opponent.velocity.y = -3;
+        opponent.velocity.y = -15;
     } else if (event.key == 'ArrowDown') {
-        opponent.velocity.y = 3;
+        opponent.velocity.y = 15;
     }
 });
 window.addEventListener('keyup', (event) => {
@@ -177,7 +195,8 @@ window.addEventListener('keyup', (event) => {
 function moveball() {
     ball.position.x = 500;
     ball.position.y = 270;
-    ball.velocity.x = 3;
+    ball.velocity.x = 10;
+    ball.velocity.y = 10
 }
 
 startGame.addEventListener('click', moveball);
